@@ -122,8 +122,8 @@ async function parsePlaces(page,browser) {
    
     let cities = await getCities(browser)
     console.log(cities,citiesPage)
-    let counter = 56
-    for(city of cities.slice(40,41)){
+    let counter = 2
+    for(city of cities.slice(1,635)){
       let cityElement = await citiesPage.$(`.ranklist > tbody tr:nth-of-type(${counter}) > td:nth-of-type(2) > a`);
       let cityName
       console.log('cityElement',cityElement);
