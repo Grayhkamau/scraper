@@ -3,7 +3,7 @@ const xlsx = require('xlsx');
 
 const email = process.argv[2];
 const password = process.argv[3];
-const filters = ["CEO","Kenya","engineering"]
+const filters = ["CFO","Kenya","engineering"]
 
 if(!email||!password) {
     console.log('please provide your email and password');
@@ -44,8 +44,10 @@ const dashboard = async (page,browser)=>{
     // await page.waitForNetworkIdle()
 
     async function getFilterIndex(indexOfFilter){
+        await delay(4000)
+
         await page.click(`.MuiGrid-item:nth-of-type(${indexOfFilter}) > div`)
-        await page.waitForNetworkIdle();
+        await delay(4000)
 
         let titles;
         if(indexOfFilter===2){
@@ -56,23 +58,27 @@ const dashboard = async (page,browser)=>{
         }
 
         let arrayOfTitles = Array.from(titles);
-        
+        arrayOfTitles.pop();
+        console.log('array of titles', arrayOfTitles)
         let targetTitleIndex;
-        let counter = 1
+        let counter = 2
         for(one of arrayOfTitles){
             let currentSmallElement
             if(indexOfFilter===2){
             currentSmallElement = await page.$(`.css-xr8o0o > .d-flex:nth-of-type(${counter}) > small`)
             }
             else if(indexOfFilter===4){
-                currentSmallElement = await page.$(`.css-1f8k2gf:nth-of-type(${counter}) > div > div > div > small`)
+            currentSmallElement = await page.$(`.css-1f8k2gf:nth-of-type(${counter}) > div > div > div > small`)
             }
-            let currentTitle = await currentSmallElement.evaluate(el=> el.textContent());
+            console.log('currentTitle',currentSmallElement)
+
+            let currentTitle = await currentSmallElement.evaluate((el)=> el.textContent);
             console.log('currentTitle',currentTitle)
             if(currentTitle===filters[0]){
                 targetTitleIndex = counter
                 break;
             }
+            counter++
         }
         return targetTitleIndex
     }
